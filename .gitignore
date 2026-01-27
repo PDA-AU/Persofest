@@ -1,25 +1,37 @@
--e 
+
+# =========================
 # Environment files
+# =========================
 *.env
 *.env.*
--e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
--e 
-# Environment files
-*.env
-*.env.*
-.env
+
+# =========================
+# Python
+# =========================
+backend/venv/
+backend/__pycache__/
+**/__pycache__/
+*.pyc
+
+# =========================
+# Node / React
+# =========================
+node_modules/
+frontend/build/
+
+# =========================
+# Docker / Database
+# =========================
+postgres-data/
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+
+-e
