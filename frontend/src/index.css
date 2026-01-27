@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-background: #FFFDF5;
+  --color-surface: #FFFFFF;
+  --color-foreground: #050505;
+  --color-primary: #FF4D4D;
+  --color-secondary: #5465FF;
+  --color-accent: #E5FD3D;
+  --color-muted: #E0E0E0;
+  --color-border: #000000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Space Mono', monospace;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Lexend Mega', sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+@layer components {
+  .btn-brutal {
+    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-bold uppercase tracking-wider border-2 border-black transition-all duration-200;
+  }
+
+  .btn-brutal-primary {
+    @apply btn-brutal bg-primary text-black shadow-brutal hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-brutal-lg active:translate-x-0 active:translate-y-0 active:shadow-brutal-sm;
+  }
+
+  .btn-brutal-secondary {
+    @apply btn-brutal bg-secondary text-white shadow-brutal hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-brutal-lg active:translate-x-0 active:translate-y-0 active:shadow-brutal-sm;
+  }
+
+  .btn-brutal-outline {
+    @apply btn-brutal bg-transparent text-black hover:bg-accent hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-brutal-lg active:translate-x-0 active:translate-y-0;
+  }
+
+  .btn-brutal-ghost {
+    @apply btn-brutal border-transparent hover:bg-black hover:text-white;
+  }
+
+  .card-brutal {
+    @apply bg-white border-2 border-black p-6 shadow-brutal relative overflow-hidden;
+  }
+
+  .card-brutal-interactive {
+    @apply card-brutal hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-brutal-xl transition-all duration-200 cursor-pointer;
+  }
+
+  .input-brutal {
+    @apply w-full h-12 px-4 py-2 font-body text-sm border-2 border-black bg-white placeholder:text-gray-500 focus:outline-none focus:shadow-brutal transition-all duration-200;
+  }
+
+  .select-brutal {
+    @apply w-full h-12 px-4 py-2 font-body text-sm border-2 border-black bg-white focus:outline-none focus:shadow-brutal transition-all duration-200 appearance-none cursor-pointer;
+  }
+
+  .label-brutal {
+    @apply block text-xs font-bold uppercase tracking-widest mb-2;
+  }
+
+  .badge-brutal {
+    @apply inline-flex items-center px-3 py-1 text-xs font-bold uppercase tracking-wider border-2 border-black;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+  border-left: 2px solid var(--color-border);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-foreground);
+  border: 2px solid var(--color-border);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-foreground);
+}
