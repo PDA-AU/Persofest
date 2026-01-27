@@ -102,6 +102,21 @@ class PersofestAPITester:
             return True
         return False
 
+    def test_login_existing_user(self):
+        """Test login with existing user"""
+        success, response = self.run_test(
+            "Login Existing User (2026AIML001)",
+            "POST",
+            "api/auth/login",
+            200,
+            data=self.existing_user_data
+        )
+        if success and 'access_token' in response:
+            self.token = response['access_token']
+            print(f"   Login successful, token received")
+            return True
+        return False
+
     def test_login_user(self):
         """Test user login and get token"""
         login_data = {
