@@ -72,7 +72,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .select-brutal {
-    @apply w-full h-12 px-4 py-2 font-body text-sm border-2 border-black bg-white focus:outline-none focus:shadow-brutal transition-all duration-200 appearance-none cursor-pointer;
+    @apply w-full h-12 px-4 py-2 font-body text-sm border-2 border-black bg-white focus:outline-none focus:shadow-brutal transition-all duration-200 cursor-pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='3' stroke-linecap='square' stroke-linejoin='miter'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.25rem;
+    padding-right: 2.5rem;
+    appearance: none;
   }
 
   .label-brutal {
