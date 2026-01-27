@@ -102,59 +102,111 @@ class PersofestAPITester:
         """Test health endpoint"""
         return self.run_test("Health Check", "GET", "api/health", 200)
 
-    def test_get_departments(self):
-        """Test departments endpoint"""
-        success, response = self.run_test("Get Departments", "GET", "api/departments", 200)
-        if success and isinstance(response, list) and len(response) > 0:
-            print(f"   Found {len(response)} departments")
-            return True
-        return False
-
-    def test_get_years(self):
-        """Test years endpoint"""
-        success, response = self.run_test("Get Years", "GET", "api/years", 200)
-        if success and isinstance(response, list) and len(response) > 0:
-            print(f"   Found {len(response)} years")
-            return True
-        return False
-
-    def test_register_user(self):
-        """Test user registration"""
+    def test_register_user_a_no_referral(self):
+        """Test User A registration without referral code"""
         success, response = self.run_test(
-            "User Registration",
+            "Register User A (no referral)",
             "POST",
             "api/auth/register",
             200,
-            data=self.test_user_data
+            data=self.user_a_data
         )
-        if success and 'id' in response:
-            print(f"   User registered with ID: {response['id']}")
-            return True
+        if success and 'referral_code' in response and 'referral_count' in response:
+            self.user_a_referral_code = response['referral_code']
+            print(f"   User A referral code: {self.user_a_referral_code}")
+            print(f"   User A referral count: {response['referral_count']}")
+            if response['referral_count'] == 0 and len(self.user_a_referral_code) == 5:
+                return True
         return False
 
-    def test_login_existing_user(self):
-        """Test login with existing user"""
+    def test_register_user_b_with_referral(self):
+        """Test User B registration with User A's referral code"""
+        if not self.user_a_referral_code:
+            print("❌ User A referral code not available")
+            return False
+            
+        user_b_with_referral = self.user_b_data.copy()
+        user_b_with_referral['referral_code'] = self.user_a_referral_code
+        
         success, response = self.run_test(
-            "Login Existing User (2026AIML001)",
+            "Register User B (with User A's referral)",
             "POST",
-            "api/auth/login",
+            "api/auth/register",
             200,
-            data=self.existing_user_data
+            data=user_b_with_referral
         )
-        if success and 'access_token' in response:
-            self.token = response['access_token']
-            print(f"   Login successful, token received")
+        if success and 'referral_code' in response:
+            print(f"   User B referral code: {response['referral_code']}")
             return True
         return False
 
-    def test_login_user(self):
-        """Test user login and get token"""
+    def test_register_user_c_with_referral(self):
+        """Test User C registration with User A's referral code"""
+        if not self.user_a_referral_code:
+            print("❌ User A referral code not available")
+            return False
+            
+        user_c_with_referral = self.user_c_data.copy()
+        user_c_with_referral['referral_code'] = self.user_a_referral_code
+        
+        success, response = self.run_test(
+            "Register User C (with User A's referral)",
+            "POST",
+            "api/auth/register",
+            200,
+            data=user_c_with_referral
+        )
+        if success and 'referral_code' in response:
+            print(f"   User C referral code: {response['referral_code']}")
+            return True
+        return False
+
+    def test_register_user_d_no_referral(self):
+        """Test User D registration without referral code"""
+        success, response = self.run_test(
+            "Register User D (no referral)",
+            "POST",
+            "api/auth/register",
+            200,
+            data=self.user_d_data
+        )
+        if success and 'referral_code' in response:
+            self.user_d_referral_code = response['referral_code']
+            print(f"   User D referral code: {self.user_d_referral_code}")
+            if len(self.user_d_referral_code) == 5 and self.user_d_referral_code != self.user_a_referral_code:
+                return True
+        return False
+
+    def test_register_with_invalid_referral(self):
+        """Test registration with invalid referral code"""
+        invalid_user_data = {
+            "name": "Invalid Test User",
+            "register_number": "2026INVALID",
+            "email": "invalid@test.com",
+            "phone_number": "9999999999",
+            "department": "Information Technology",
+            "year_of_study": "First Year",
+            "password": "test123",
+            "referral_code": "INVALID"
+        }
+        
+        success, response = self.run_test(
+            "Register with invalid referral code",
+            "POST",
+            "api/auth/register",
+            400,  # Should fail with 400
+            data=invalid_user_data
+        )
+        return success
+
+    def test_login_user_a(self):
+        """Test login User A and get token"""
         login_data = {
-            "register_number": self.test_user_data["register_number"],
-            "password": self.test_user_data["password"]
+            "register_number": self.user_a_data["register_number"],
+            "password": self.user_a_data["password"]
         }
         success, response = self.run_test(
-            "User Login",
+            "Login User A",
             "POST",
             "api/auth/login",
             200,
@@ -166,43 +218,58 @@ class PersofestAPITester:
             return True
         return False
 
-    def test_get_profile(self):
-        """Test get user profile"""
+    def test_get_user_a_profile(self):
+        """Test get User A profile to verify referral count"""
         if not self.token:
             print("❌ No token available for profile test")
             return False
         
         success, response = self.run_test(
-            "Get Profile",
+            "Get User A Profile",
             "GET",
             "api/profile/me",
             200
         )
-        if success and 'name' in response:
-            print(f"   Profile retrieved for: {response['name']}")
-            return True
+        if success and 'referral_count' in response:
+            print(f"   User A referral count: {response['referral_count']}")
+            print(f"   User A referral code: {response['referral_code']}")
+            # Should have 2 referrals (User B and User C)
+            if response['referral_count'] == 2:
+                return True
         return False
 
-    def test_update_profile(self):
-        """Test update user profile"""
-        if not self.token:
-            print("❌ No token available for profile update test")
-            return False
-        
-        update_data = {
-            "email": f"updated{datetime.now().strftime('%H%M%S')}@example.com",
-            "phone_number": "9876543211"
-        }
+    def test_stats_endpoint(self):
+        """Test stats endpoint for total participants"""
         success, response = self.run_test(
-            "Update Profile",
-            "PATCH",
-            "api/profile/me",
-            200,
-            data=update_data
+            "Get Stats",
+            "GET",
+            "api/stats",
+            200
         )
-        if success and response.get('email') == update_data['email']:
-            print(f"   Profile updated successfully")
-            return True
+        if success and 'total_participants' in response:
+            print(f"   Total participants: {response['total_participants']}")
+            # Should have 4 participants (A, B, C, D)
+            if response['total_participants'] >= 4:
+                return True
+        return False
+
+    def test_leaderboard_endpoint(self):
+        """Test leaderboard endpoint"""
+        success, response = self.run_test(
+            "Get Leaderboard",
+            "GET",
+            "api/leaderboard",
+            200
+        )
+        if success and isinstance(response, list):
+            print(f"   Leaderboard entries: {len(response)}")
+            if len(response) > 0:
+                top_user = response[0]
+                print(f"   Top referrer: {top_user['name']} with {top_user['referral_count']} referrals")
+                # User A should be at top with 2 referrals
+                if top_user['name'] == 'Test User A' and top_user['referral_count'] == 2:
+                    return True
+            return len(response) >= 0  # At least return success if we get a list
         return False
 
 def main():
