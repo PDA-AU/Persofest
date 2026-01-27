@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Zap, ArrowLeft, ArrowRight, Check, Eye, EyeOff, User, Mail, Phone, Building, GraduationCap, Lock } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Eye, EyeOff, User, Mail, Phone, Building, GraduationCap, Lock, Gift } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
@@ -24,6 +24,7 @@ const Register = () => {
     year_of_study: '',
     password: '',
     confirmPassword: '',
+    referral_code: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -108,7 +109,7 @@ const Register = () => {
       const selectedDept = departments.find(d => d.value === formData.department);
       const selectedYear = years.find(y => y.value === formData.year_of_study);
 
-      await axios.post(`${API_URL}/api/auth/register`, {
+      const payload = {
         name: formData.name,
         register_number: formData.register_number.toUpperCase(),
         email: formData.email,
@@ -116,7 +117,14 @@ const Register = () => {
         department: selectedDept?.label,
         year_of_study: selectedYear?.label,
         password: formData.password,
-      });
+      };
+
+      // Add referral code only if provided
+      if (formData.referral_code && formData.referral_code.trim()) {
+        payload.referral_code = formData.referral_code.toUpperCase();
+      }
+
+      await axios.post(`${API_URL}/api/auth/register`, payload);
 
       setSuccess(true);
       setTimeout(() => {
@@ -159,8 +167,7 @@ const Register = () => {
       <header className="relative z-10 p-4 border-b-4 border-black bg-surface">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
-            <Zap size={28} className="text-primary" strokeWidth={3} />
-            <span className="font-heading text-lg">PERSOFEST'26</span>
+            <img src="/persofest.png" alt="PERSOFEST'26" className="h-7" />
           </Link>
           <Link to="/login" className="btn-brutal-outline px-4 py-2 text-xs" data-testid="login-link">
             Login
@@ -333,6 +340,24 @@ const Register = () => {
                     <ArrowRight className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none rotate-90" size={18} />
                   </div>
                   {errors.year_of_study && <p className="text-primary text-xs mt-1 font-bold">{errors.year_of_study}</p>}
+                </div>
+
+                <div>
+                  <label className="label-brutal">Referral Code (Optional)</label>
+                  <div className="relative">
+                    <Gift className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                    <input
+                      type="text"
+                      name="referral_code"
+                      value={formData.referral_code}
+                      onChange={handleChange}
+                      className="input-brutal pl-10 uppercase"
+                      placeholder="Enter referral code"
+                      maxLength={5}
+                      data-testid="input-referral-code"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-600 mt-1">Have a referral code? Enter it here!</p>
                 </div>
               </div>
             )}
