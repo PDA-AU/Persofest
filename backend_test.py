@@ -186,10 +186,11 @@ def main():
         ("Health Check", tester.test_health_check),
         ("Get Departments", tester.test_get_departments),
         ("Get Years", tester.test_get_years),
-        ("User Registration", tester.test_register_user),
-        ("User Login", tester.test_login_user),
+        ("Login Existing User", tester.test_login_existing_user),
         ("Get Profile", tester.test_get_profile),
         ("Update Profile", tester.test_update_profile),
+        ("User Registration", tester.test_register_user),
+        ("New User Login", tester.test_login_user),
     ]
     
     failed_tests = []
