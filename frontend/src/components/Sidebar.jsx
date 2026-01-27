@@ -19,26 +19,35 @@ const Sidebar = ({ isOpen, onToggle }) => {
 
   return (
     <>
-      {/* Mobile menu button */}
-      <button
-        onClick={onToggle}
-        className="lg:hidden fixed top-4 left-4 z-50 btn-brutal-primary p-3"
-        data-testid="mobile-menu-toggle"
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
+      {/* Mobile Header Bar - fixed at top */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-primary border-b-4 border-black z-40 flex items-center px-4">
+        <button
+          onClick={onToggle}
+          className="p-2 border-2 border-black bg-white hover:bg-accent transition-all duration-200 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-brutal-sm active:translate-x-0 active:translate-y-0"
+          data-testid="mobile-menu-toggle"
+        >
+          {isOpen ? <X size={20} strokeWidth={2.5} /> : <Menu size={20} strokeWidth={2.5} />}
+        </button>
+        <div className="flex items-center gap-2 ml-3">
+          <Zap size={22} className="text-black" strokeWidth={3} />
+          <span className="font-heading text-sm text-black tracking-tight">PERSOFEST'26</span>
+        </div>
+      </div>
+
+      {/* Spacer for mobile header */}
+      <div className="lg:hidden h-14" />
 
       {/* Overlay for mobile */}
       {isOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-black/50 z-30"
+          className="lg:hidden fixed inset-0 bg-black/50 z-30 transition-opacity duration-300"
           onClick={onToggle}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-surface border-r-4 border-black z-40 transform transition-transform duration-300 ${
+        className={`fixed top-0 lg:top-0 left-0 h-full w-64 bg-surface border-r-4 border-black z-40 transform transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
         data-testid="sidebar"
