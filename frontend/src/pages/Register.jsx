@@ -12,8 +12,29 @@ const Register = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [departments, setDepartments] = useState([]);
-  const [years, setYears] = useState([]);
+
+  // Fallback data for departments and years
+  const fallbackDepartments = [
+    { value: "Artificial Intelligence and Data Science", label: "Artificial Intelligence and Data Science" },
+    { value: "Aerospace Engineering", label: "Aerospace Engineering" },
+    { value: "Automobile Engineering", label: "Automobile Engineering" },
+    { value: "Computer Technology", label: "Computer Technology" },
+    { value: "Electronics and Communication Engineering", label: "Electronics and Communication Engineering" },
+    { value: "Electronics and Instrumentation Engineering", label: "Electronics and Instrumentation Engineering" },
+    { value: "Production Technology", label: "Production Technology" },
+    { value: "Robotics and Automation", label: "Robotics and Automation" },
+    { value: "Rubber and Plastics Technology", label: "Rubber and Plastics Technology" },
+    { value: "Information Technology", label: "Information Technology" }
+  ];
+
+  const fallbackYears = [
+    { value: "First Year", label: "First Year" },
+    { value: "Second Year", label: "Second Year" },
+    { value: "Third Year", label: "Third Year" }
+  ];
+
+  const [departments, setDepartments] = useState(fallbackDepartments);
+  const [years, setYears] = useState(fallbackYears);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -39,11 +60,18 @@ const Register = () => {
         axios.get(`${API_URL}/api/departments`),
         axios.get(`${API_URL}/api/years`)
       ]);
-      setDepartments(Array.isArray(deptRes.data) ? deptRes.data : []);
-      setYears(Array.isArray(yearRes.data) ? yearRes.data : []);
+
+      // Only update if we get valid array responses
+      if (Array.isArray(deptRes.data) && deptRes.data.length > 0) {
+        setDepartments(deptRes.data);
+      }
+      if (Array.isArray(yearRes.data) && yearRes.data.length > 0) {
+        setYears(yearRes.data);
+      }
 
     } catch (err) {
-      console.error('Failed to fetch options:', err);
+      console.error('Failed to fetch options, using fallback data:', err);
+      // Fallback data already set in initial state
     }
   };
 
