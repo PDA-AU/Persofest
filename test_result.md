@@ -307,9 +307,11 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
-  test_all: true
+  current_focus: 
+    - "PERSOFEST'26 Design Verification - Registration Flow"
+  stuck_tasks:
+    - "PERSOFEST'26 Design Verification - Registration Flow"
+  test_all: false
   test_priority: "high_first"
 
 agent_communication:
