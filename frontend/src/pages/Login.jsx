@@ -50,8 +50,9 @@ const Login = () => {
       <div className="relative z-10 w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <img src="/persofest.png" alt="PERSOFEST'26" className="h-9" />
+          <Link to="/" className="inline-flex flex-col items-center gap-3 mb-6">
+            <img src="/persofest.png" alt="PERSOFEST'26" className="h-16 md:h-20 w-auto" />
+            <span className="font-heading text-xl md:text-2xl tracking-tight">PERSOFEST'26</span>
           </Link>
           <h1 className="font-heading text-3xl md:text-4xl mb-2">Welcome Back</h1>
           <p className="font-body text-sm text-gray-600">Sign in to access your profile</p>

@@ -29,7 +29,8 @@ const Sidebar = ({ isOpen, onToggle }) => {
           {isOpen ? <X size={20} strokeWidth={2.5} /> : <Menu size={20} strokeWidth={2.5} />}
         </button>
         <div className="flex items-center gap-2 ml-3">
-          <img src="/persofest.png" alt="PERSOFEST'26" className="h-6" />
+          <img src="/persofest.png" alt="PERSOFEST'26" className="h-8 w-auto" />
+          <span className="font-heading text-xs text-black tracking-tight">PERSOFEST'26</span>
         </div>
       </div>
 
@@ -53,8 +54,9 @@ const Sidebar = ({ isOpen, onToggle }) => {
       >
         {/* Logo */}
         <div className="p-6 border-b-4 border-black bg-primary">
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <img src="/persofest.png" alt="PERSOFEST'26" className="h-7" />
+          <Link to="/dashboard" className="flex flex-col items-center gap-2">
+            <img src="/persofest.png" alt="PERSOFEST'26" className="h-12 w-auto" />
+            <span className="font-heading text-sm text-black tracking-tight">PERSOFEST'26</span>
           </Link>
         </div>
 

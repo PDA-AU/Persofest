@@ -166,8 +166,9 @@ const Register = () => {
       {/* Header */}
       <header className="relative z-10 p-4 border-b-4 border-black bg-surface">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/persofest.png" alt="PERSOFEST'26" className="h-7" />
+          <Link to="/" className="flex items-center gap-2 md:gap-3">
+            <img src="/persofest.png" alt="PERSOFEST'26" className="h-8 md:h-12 w-auto" />
+            <span className="font-heading text-sm md:text-lg tracking-tight">PERSOFEST'26</span>
           </Link>
           <Link to="/login" className="btn-brutal-outline px-4 py-2 text-xs" data-testid="login-link">
             Login
@@ -303,7 +304,7 @@ const Register = () => {
                 <div>
                   <label className="label-brutal">Department</label>
                   <div className="relative">
-                    <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={18} />
+                    <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none z-10" size={18} />
                     <select
                       name="department"
                       value={formData.department}
@@ -316,7 +317,6 @@ const Register = () => {
                         <option key={dept.value} value={dept.value}>{dept.label}</option>
                       ))}
                     </select>
-                    <ArrowRight className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none rotate-90" size={18} />
                   </div>
                   {errors.department && <p className="text-primary text-xs mt-1 font-bold">{errors.department}</p>}
                 </div>
@@ -324,7 +324,7 @@ const Register = () => {
                 <div>
                   <label className="label-brutal">Year of Study</label>
                   <div className="relative">
-                    <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={18} />
+                    <GraduationCap className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none z-10" size={18} />
                     <select
                       name="year_of_study"
                       value={formData.year_of_study}
@@ -337,7 +337,6 @@ const Register = () => {
                         <option key={year.value} value={year.value}>{year.label}</option>
                       ))}
                     </select>
-                    <ArrowRight className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none rotate-90" size={18} />
                   </div>
                   {errors.year_of_study && <p className="text-primary text-xs mt-1 font-bold">{errors.year_of_study}</p>}
                 </div>

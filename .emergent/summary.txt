@@ -1,0 +1,274 @@
+<analysis>**original_problem_statement:**
+# Role
+Act as a Senior Full-Stack Developer and UI/UX Designer expert in modern web technologies.
+
+# Project Overview
+Build a comprehensive web application for PERSOFEST26", an event onboarding and registration portal. The application requires a robust backend, a reactive frontend, and a distinctive design identity.
+
+# Tech Stack & Infrastructure
+1.  **Database:** PostgreSQL
+2.  **Backend:** FastAPI (Python) using SQLAlchemy ORM for database interactions.
+3.  **Frontend:** React.js with Tailwind CSS.
+
+# PRODUCT REQUIREMENTS
+## Original Requirements
+- **Database:** `Participants` table with fields for Name, Register Number, Email, Phone, Department, Year, and Profile Picture.
+- **Backend:** RESTful API for Registration, Profile Retrieval, and Updates using FastAPI, Pydantic, SQLAlchemy, and JWT authentication.
+- **Frontend:** Responsive React app with pages for Registration, Profile/Dashboard, and a Neobrutalism design.
+
+## New User-Requested Features
+- **Logo:** Replace the existing logo with a new provided transparent `persofest.png`. The logo should be larger and displayed alongside the "Persofest 26 text heading.
+- **Referral System:**
+    - Generate a unique five-character referral code for each new user.
+    - Add an optional Referral Code field to the registration form.
+    - Track the count of referrals for each user.
+    - Display a leaderboard of the top 5 referrers (Name and Reg No) on the home page.
+- **Statistics:** Display the total registration count on the home page.
+- **User Dashboard:** Show the user's referral code with a Copy button.
+- **UI/UX Enhancements:**
+    - Implement purple as the primary color, fitting the Neobrutalism theme.
+    - Fix non-working dropdowns for Department and Year selection on the registration form.
+- **Deployment & DB Documentation:**
+    - Create  and  with instructions to deploy the app.
+    - Create a  file explaining database setup and schema migration, including test user credentials.
+- **QR Code (Future Task from previous fork):** Implement a QR code for event check-in on the user dashboard.
+
+**User's preferred language**: English
+
+**what currently exists?**
+The agent has implemented all requested features, including the referral system, QR code generation, UI color updates, and documentation. A full-stack application with a FastAPI/PostgreSQL backend and a React frontend is in place. However, the application is currently non-functional due to a recurring and critical environment issue where the PostgreSQL service and its installation disappear, causing the backend to fail.
+
+**Last working item**:
+    - Last item agent was working: The agent was attempting to diagnose and fix a fatal backend error () caused by the PostgreSQL service becoming completely unavailable for the second time in the session.
+    - Status: BLOCKED
+    - Agent Testing Done: N
+    - Which testing method agent to use? troubleshoot agent
+    - User Testing Done: N
+
+**All Pending/In progress Issue list**:
+  - Issue 1: Critical Environment Instability: PostgreSQL service disappears (P0)
+  - Issue 2: UI Color Inconsistency on Login Page (P2)
+  - Issue 3: Minor frontend console warnings (from previous fork) (P2)
+
+  Issues Detail:
+  - Issue 1: 
+     - Description: The PostgreSQL installation vanishes from the container environment after some time, causing the backend to crash with . This has happened twice. The agent re-installed it successfully the first time but failed during the second attempt due to permission errors ().
+     - Attempted fixes: Re-running Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libc-l10n libcommon-sense-perl libjson-perl libjson-xs-perl libllvm14 libpq5
+  libtypes-serialiser-perl locales logrotate postgresql-15
+  postgresql-client-15 postgresql-client-common postgresql-common ssl-cert
+  sysstat
+Suggested packages:
+  bsd-mailx | mailx postgresql-doc postgresql-doc-15 isag
+The following NEW packages will be installed:
+  libc-l10n libcommon-sense-perl libjson-perl libjson-xs-perl libllvm14 libpq5
+  libtypes-serialiser-perl locales logrotate postgresql postgresql-15
+  postgresql-client-15 postgresql-client-common postgresql-common ssl-cert
+  sysstat
+0 upgraded, 16 newly installed, 0 to remove and 0 not upgraded.
+Need to get 43.3 MB of archives.
+After this operation, 195 MB of additional disk space will be used.
+Do you want to continue? [Y/n] Abort. and attempting to re-initialize the database cluster.
+     - Next debug checklist:
+        - **Invoke the  immediately.** This is likely an infrastructure or container configuration issue, not a code issue.
+        - Investigate how to install and run services with persistence in this specific environment.
+        - Check if  can or should be configured to manage the PostgreSQL service.
+     - Why fix this issue and what will be achieved with the fix?: This is a hard blocker. The application cannot run without a stable database connection.
+     - Status: BLOCKED
+     - Is recurring issue? Y
+     - Should Test frontend/backend/both after fix? Both
+     - Blocked on other issue: None. This is the root blocker.
+  - Issue 2: 
+     - Description: Despite updating the primary color to purple in  and , a screenshot of the login page showed the main button was still the old red color.
+     - Attempted fixes: Agent updated the theme and color variables in  and .
+     - Next debug checklist:
+        - Once the environment is stable, inspect the  component.
+        - Check for any hardcoded color classes (, etc.) on the button that might override the new primary theme color.
+        - Ensure the Tailwind CSS build process is correctly picking up the config changes.
+     - Why fix this issue and what will be achieved with the fix?: To ensure a consistent UI theme as requested by the user.
+     - Status: NOT STARTED
+     - Is recurring issue? N
+     - Should Test frontend/backend/both after fix? Frontend
+     - Blocked on other issue: Issue 1: Critical Environment Instability
+  - Issue 3: 
+     - Description: The previous fork's test report mentioned minor console warnings in the frontend, likely related to unused variables or linting issues. The agent resolved a no console warnings message early on, but it's worth re-verifying.
+     - Attempted fixes: None in this session.
+     - Next debug checklist: Run  in  and check the browser console during testing.
+     - Why fix this issue and what will be achieved with the fix?: Improves code hygiene and prevents potential bugs.
+     - Status: NOT STARTED
+     - Is recurring issue? N
+     - Should Test frontend/backend/both after fix? Frontend
+     - Blocked on other issue: Issue 1: Critical Environment Instability
+
+**In progress Task List**:
+There are no tasks currently in progress, as all work is blocked by the database environment issue.
+
+**Upcoming and Future Tasks**
+Upcoming Tasks:
+  - **Full System Verification (P0):** Once the database is stable, perform a full end-to-end test of all newly added features: user registration with/without referral, login, dashboard view (QR, referral code copy), and the landing page (participant count, leaderboard).
+  
+Future Tasks:
+  - The agent has already implemented the QR Code for Check-in feature which was a future task from the previous fork. No other future tasks are pending.
+
+**Completed work in this session**
+- **Referral System:** Implemented a complete referral system with backend logic for code generation/tracking and frontend components for display and input.
+- **Landing Page Enhancements:** Added a live participant counter and a top 5 referrer leaderboard.
+- **UI/Theme Overhaul:**
+    - Replaced the application logo and updated components to show it alongside the site title.
+    - Changed the primary color scheme to purple.
+    - Fixed a bug where dropdown menus were unusable due to missing visual indicators.
+- **Dashboard Features:** Added a QR code for check-in and a copy to clipboard button for the user's referral code.
+- **Documentation:**
+    - Created  and  for deployment instructions.
+    - Created  with details on database schema and test credentials.
+
+**Earlier issues found/mentioned but not fixed**
+   - The primary issue from the previous fork, PostgreSQL service instability, has recurred and is now the main blocker. It has escalated from a simple service restart to the entire package installation disappearing.
+
+**Known issue recurrence from previous fork**
+  - **Issue:** PostgreSQL service instability.
+  - **Recurrence count:** 2 (in this session, after being noted as a one-off in the prior fork).
+  - **Status:** BLOCKED
+
+**Code Architecture**
+
+
+**Key Technical Concepts**
+- **Full-Stack Development**: React frontend with a FastAPI backend.
+- **Database**: PostgreSQL with SQLAlchemy ORM.
+- **Authentication**: JWT (JSON Web Tokens).
+- **UI/UX Design**: Neobrutalism aesthetic implemented with Tailwind CSS.
+- **API Development**: Added endpoints for statistics and leaderboards.
+- **Frontend State Management**: Using  and  for API calls and form handling.
+- **QR Code Generation**: Using  library on the frontend.
+
+**key DB schema**
+  - **participants**: 
+
+**changes in tech stack**
+  -  and  libraries were added to the frontend.
+  -  was added to the backend .
+
+**All files of reference**
+- : Modified to add referral logic and new endpoints (, ).
+- : Updated  model with referral-related fields.
+- : Updated Pydantic schemas to match new model fields.
+- : Updated to display participant count and leaderboard.
+- : Updated with an optional referral code field and a fix for dropdowns.
+- : Updated to display the user's referral code and a QR code.
+- : Modified to add the new purple color theme and a fix for select element styling.
+- : Updated with the new primary color.
+- , ==========================================
+  PERSOFEST'26 Automated Setup
+==========================================
+
+→ Starting installation process...
+
+→ Step 1/9: Updating system packages...
+All packages are up to date.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+[0;32m✓ System packages updated[0m
+
+→ Step 2/9: Installing PostgreSQL..., : New documentation files.
+
+**Areas that need refactoring**:
+- None at present; focus must be on fixing the environment.
+
+**key api endpoints**
+- 
+- 
+- 
+- : **(New)** Fetches total number of registered participants.
+- : **(New)** Fetches the top 5 referrers.
+- : **(New)** Fetches the list of departments.
+- : **(New)** Fetches the list of study years.
+
+**Critical Info for New Agent**
+- **DO NOT attempt to fix the code first.** The primary issue is a **critical, recurring environment failure** where the PostgreSQL installation disappears. Your first action should be to use the  to diagnose this infrastructure problem.
+- The application is configured to use PostgreSQL, but the base container seems to favor MongoDB and does not persist apt 2.6.1 (arm64)
+Usage: apt-get [options] command
+       apt-get [options] install|remove pkg1 [pkg2 ...]
+       apt-get [options] source pkg1 [pkg2 ...]
+
+apt-get is a command line interface for retrieval of packages
+and information about them from authenticated sources and
+for installation, upgrade and removal of packages together
+with their dependencies.
+
+Most used commands:
+  update - Retrieve new lists of packages
+  upgrade - Perform an upgrade
+  install - Install new packages (pkg is libc6 not libc6.deb)
+  reinstall - Reinstall packages (pkg is libc6 not libc6.deb)
+  remove - Remove packages
+  purge - Remove packages and config files
+  autoremove - Remove automatically all unused packages
+  dist-upgrade - Distribution upgrade, see apt-get(8)
+  dselect-upgrade - Follow dselect selections
+  build-dep - Configure build-dependencies for source packages
+  satisfy - Satisfy dependency strings
+  clean - Erase downloaded archive files
+  autoclean - Erase old downloaded archive files
+  check - Verify that there are no broken dependencies
+  source - Download source archives
+  download - Download the binary package into the current directory
+  changelog - Download and display the changelog for the given package
+
+See apt-get(8) for more information about the available commands.
+Configuration options and syntax is detailed in apt.conf(5).
+Information about how to configure sources can be found in sources.list(5).
+Package and version choices can be expressed via apt_preferences(5).
+Security details are available in apt-secure(8).
+                                        This APT has Super Cow Powers. installations reliably.
+- All user-requested features have been coded and were partially tested before the environment failed. Once the environment is stable, a full regression and feature test is required.
+
+**documents and test reports created in this job**
+- 
+- 
+- 
+- 
+- ==========================================
+  PERSOFEST'26 Automated Setup
+==========================================
+
+→ Starting installation process...
+
+→ Step 1/9: Updating system packages...
+All packages are up to date.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+[0;32m✓ System packages updated[0m
+
+→ Step 2/9: Installing PostgreSQL...
+
+**Last 10 User Messages and any pending HUMAN messages**
+1. **User**: 
+   - **Status**: IN PROGRESS (Blocked by environment issue). Agent implemented the code changes but was blocked before final verification.
+2. **User**: 
+   - **Status**: IN PROGRESS (Blocked by environment issue). The agent implemented all these features, but the final product is not functional due to the database crash.
+
+**Project Health Check:**
+- **Broken**: The backend is non-operational due to the database service being unavailable.
+
+**3rd Party Integrations**
+- None.
+
+**Testing status**
+  - Testing agent used after significant changes: YES (but tests are now invalid due to the broken environment).
+  - Troubleshoot agent used after agent stuck in loop: NO (but is the recommended next step).
+  - Test files created: None.
+  - Known regressions: The entire application is non-functional.
+
+**Credentials to test flow:**
+Provided in .
+- **Test User 1**:
+  - **Email**: 
+  - **Password**: 
+- **Test User 2 (for referral testing)**:
+  - **Email**: 
+  - **Password**: 
+
+**What agent forgot to execute**
+The agent was on the right track but was repeatedly blocked by an environmental issue outside of its direct control (disappearing PostgreSQL). It did not get a chance to fully verify the final set of UI changes due to this blocker. The next critical action is to stabilize the environment, not add more features or code.</analysis>

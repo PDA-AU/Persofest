@@ -44,8 +44,9 @@ const Landing = () => {
       {/* Header */}
       <header className="relative z-10 p-4 md:p-6 border-b-4 border-black bg-surface">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <img src="/persofest.png" alt="PERSOFEST'26" className="h-7 md:h-9" />
+          <div className="flex items-center gap-3">
+            <img src="/persofest.png" alt="PERSOFEST'26" className="h-10 md:h-14 w-auto" />
+            <span className="font-heading text-lg md:text-2xl tracking-tight">PERSOFEST'26</span>
           </div>
           <nav className="flex gap-2 md:gap-4">
             <Link
