@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from '../App';
 import axios from 'axios';
+import { QRCodeCanvas } from 'qrcode.react';
 import { 
   User, Mail, Phone, Building, GraduationCap, Camera, 
-  Edit2, Save, X, Check, Calendar, Upload
+  Edit2, Save, X, Check, Calendar, Upload, Gift, Copy, Users
 } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL || '';
@@ -14,6 +15,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [copyMessage, setCopyMessage] = useState('');
   const fileInputRef = useRef(null);
 
   const [editData, setEditData] = useState({
@@ -84,6 +86,14 @@ const Dashboard = () => {
       setMessage({ type: 'error', text: err.response?.data?.detail || 'Failed to upload photo' });
     } finally {
       setUploadingPhoto(false);
+    }
+  };
+
+  const handleCopyReferralCode = () => {
+    if (user?.referral_code) {
+      navigator.clipboard.writeText(user.referral_code);
+      setCopyMessage('Copied!');
+      setTimeout(() => setCopyMessage(''), 2000);
     }
   };
 
@@ -256,6 +266,67 @@ const Dashboard = () => {
                   );
                 })}
               </div>
+            </div>
+          </div>
+
+          {/* Referral Code Card */}
+          <div className="md:col-span-2">
+            <div className="card-brutal p-4 md:p-6 bg-accent transition-all duration-300 hover:shadow-brutal-lg">
+              <div className="flex items-center gap-2 mb-3">
+                <Gift size={18} strokeWidth={2.5} className="md:w-5 md:h-5" />
+                <h3 className="font-heading text-xs md:text-sm uppercase tracking-widest">Your Referral Code</h3>
+              </div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <div className="flex-1 bg-white border-4 border-black p-3 md:p-4">
+                  <p className="font-heading text-2xl md:text-3xl tracking-widest text-center">
+                    {user?.referral_code || 'N/A'}
+                  </p>
+                </div>
+                <button
+                  onClick={handleCopyReferralCode}
+                  className="btn-brutal bg-secondary text-white flex items-center gap-2 px-4 py-3 w-full sm:w-auto"
+                  data-testid="copy-referral-button"
+                >
+                  {copyMessage ? (
+                    <>
+                      <Check size={16} />
+                      {copyMessage}
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={16} />
+                      Copy Code
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="flex items-center gap-2 mt-3 p-2 bg-white border-2 border-black">
+                <Users size={14} strokeWidth={2.5} />
+                <p className="font-body text-xs md:text-sm">
+                  <span className="font-bold">{user?.referral_count || 0}</span> people joined using your code
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* QR Code Card */}
+          <div className="md:col-span-1">
+            <div className="card-brutal p-4 md:p-6 text-center transition-all duration-300 hover:shadow-brutal-lg">
+              <h3 className="font-heading text-xs md:text-sm uppercase tracking-widest mb-3 md:mb-4">Check-in QR</h3>
+              <div className="bg-white p-3 border-4 border-black inline-block">
+                <QRCodeCanvas 
+                  value={JSON.stringify({
+                    register_number: user?.register_number,
+                    name: user?.name,
+                    event: 'PERSOFEST26'
+                  })}
+                  size={120}
+                  level="H"
+                />
+              </div>
+              <p className="font-body text-[10px] md:text-xs text-gray-600 mt-3">
+                Show this at event check-in
+              </p>
             </div>
           </div>
 
