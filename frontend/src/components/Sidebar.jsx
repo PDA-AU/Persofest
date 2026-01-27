@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../App';
-import { User, LogOut, Menu, X, Zap } from 'lucide-react';
+import { User, LogOut, Menu, X } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onToggle }) => {
   const { logout, user } = useAuth();
@@ -29,8 +29,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
           {isOpen ? <X size={20} strokeWidth={2.5} /> : <Menu size={20} strokeWidth={2.5} />}
         </button>
         <div className="flex items-center gap-2 ml-3">
-          <Zap size={22} className="text-black" strokeWidth={3} />
-          <span className="font-heading text-sm text-black tracking-tight">PERSOFEST'26</span>
+          <img src="/persofest.png" alt="PERSOFEST'26" className="h-6" />
         </div>
       </div>
 
@@ -55,8 +54,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
         {/* Logo */}
         <div className="p-6 border-b-4 border-black bg-primary">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <Zap size={28} className="text-black" strokeWidth={3} />
-            <span className="font-heading text-lg text-black tracking-tight">PERSOFEST'26</span>
+            <img src="/persofest.png" alt="PERSOFEST'26" className="h-7" />
           </Link>
         </div>
 

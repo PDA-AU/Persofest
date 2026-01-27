@@ -1,13 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Zap, ArrowRight, Calendar, Users, Star } from 'lucide-react';
+import { ArrowRight, Calendar, Users, Star, Trophy } from 'lucide-react';
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
 const Landing = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [stats, setStats] = useState({ total_participants: 0 });
+  const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
     setIsVisible(true);
+    fetchStats();
+    fetchLeaderboard();
   }, []);
+
+  const fetchStats = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/stats`);
+      setStats(response.data);
+    } catch (err) {
+      console.error('Failed to fetch stats:', err);
+    }
+  };
+
+  const fetchLeaderboard = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/leaderboard`);
+      setLeaderboard(response.data);
+    } catch (err) {
+      console.error('Failed to fetch leaderboard:', err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -20,8 +45,7 @@ const Landing = () => {
       <header className="relative z-10 p-4 md:p-6 border-b-4 border-black bg-surface">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Zap size={28} className="text-primary md:w-8 md:h-8" strokeWidth={3} />
-            <span className="font-heading text-lg md:text-2xl tracking-tight">PERSOFEST'26</span>
+            <img src="/persofest.png" alt="PERSOFEST'26" className="h-7 md:h-9" />
           </div>
           <nav className="flex gap-2 md:gap-4">
             <Link
@@ -93,7 +117,7 @@ const Landing = () => {
                 style={{ transitionDelay: '400ms' }}
               >
                 <Users size={28} className="text-black mb-3 md:w-8 md:h-8" strokeWidth={2.5} />
-                <h3 className="font-heading text-lg md:text-xl mb-2">500+ Participants</h3>
+                <h3 className="font-heading text-lg md:text-xl mb-2">{stats.total_participants}+ Participants</h3>
                 <p className="font-body text-xs md:text-sm">Join hundreds of talented students from all departments.</p>
               </div>
               <div 
@@ -108,6 +132,48 @@ const Landing = () => {
           </div>
         </div>
       </section>
+
+      {/* Leaderboard Section */}
+      {leaderboard.length > 0 && (
+        <section className="relative z-10 px-4 md:px-8 py-8 md:py-12 bg-accent border-y-4 border-black">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-6 md:mb-8">
+              <div className="inline-flex items-center gap-2 mb-3">
+                <Trophy size={32} className="text-primary" strokeWidth={2.5} />
+                <h2 className="font-heading text-2xl md:text-4xl">Top Referrers</h2>
+              </div>
+              <p className="font-body text-xs md:text-sm">Our community builders leading the way!</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 max-w-5xl mx-auto">
+              {leaderboard.map((user, index) => (
+                <div 
+                  key={user.register_number}
+                  className={`card-brutal p-4 md:p-5 text-center transition-all duration-300 hover:shadow-brutal-lg ${
+                    index === 0 ? 'bg-primary md:col-span-5 md:row-start-1' : 'bg-white'
+                  }`}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className={`font-heading ${index === 0 ? 'text-3xl md:text-4xl' : 'text-2xl md:text-3xl'} mb-2`}>
+                    #{index + 1}
+                  </div>
+                  <p className={`font-body font-bold ${index === 0 ? 'text-sm md:text-base' : 'text-xs md:text-sm'} truncate mb-1`}>
+                    {user.name}
+                  </p>
+                  <p className={`font-body ${index === 0 ? 'text-xs md:text-sm' : 'text-[10px] md:text-xs'} text-gray-600 truncate mb-2`}>
+                    {user.register_number}
+                  </p>
+                  <div className={`inline-flex items-center gap-1 px-2 py-1 bg-secondary text-white border-2 border-black ${
+                    index === 0 ? 'text-xs md:text-sm' : 'text-[10px] md:text-xs'
+                  }`}>
+                    <Users size={index === 0 ? 14 : 12} strokeWidth={2.5} />
+                    <span className="font-bold">{user.referral_count} referrals</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Marquee Banner */}
       <div className="relative z-10 border-y-4 border-black bg-black text-white py-3 md:py-4 overflow-hidden">
