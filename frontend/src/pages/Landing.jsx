@@ -43,29 +43,33 @@ const Landing = () => {
 
       {/* Header */}
       <header className="relative z-10 p-4 md:p-6 border-b-4 border-black bg-surface">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
+          
+          <div className="flex items-center gap-3 justify-center sm:justify-start">
             <img src="/persofest.png" alt="PERSOFEST'26" className="h-10 md:h-14 w-auto" />
-            <span className="font-heading text-lg md:text-2xl tracking-tight">PERSOFEST'26</span>
+            <span className="font-heading text-lg md:text-2xl tracking-tight">
+              PERSOFEST'26
+            </span>
           </div>
-          <nav className="flex gap-2 md:gap-4">
+
+          <nav className="flex gap-2 md:gap-4 justify-center">
             <Link
               to="/login"
               className="btn-brutal-outline px-3 py-2 text-xs md:px-4 md:text-sm"
-              data-testid="login-nav-button"
             >
               Login
             </Link>
             <Link
               to="/register"
               className="btn-brutal-primary px-3 py-2 text-xs md:px-4 md:text-sm"
-              data-testid="register-nav-button"
             >
               Register
             </Link>
           </nav>
+
         </div>
       </header>
+
 
       {/* Hero Section */}
       <section className="relative z-10 px-4 md:px-8 py-10 md:py-24">
