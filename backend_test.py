@@ -273,21 +273,23 @@ class PersofestAPITester:
         return False
 
 def main():
-    print("🚀 Starting PERSOFEST'26 API Tests")
-    print("=" * 50)
+    print("🚀 Starting PERSOFEST'26 Referral System API Tests")
+    print("=" * 60)
     
     tester = PersofestAPITester()
     
-    # Test sequence
+    # Test sequence as specified in review request
     tests = [
         ("Health Check", tester.test_health_check),
-        ("Get Departments", tester.test_get_departments),
-        ("Get Years", tester.test_get_years),
-        ("Login Existing User", tester.test_login_existing_user),
-        ("Get Profile", tester.test_get_profile),
-        ("Update Profile", tester.test_update_profile),
-        ("User Registration", tester.test_register_user),
-        ("New User Login", tester.test_login_user),
+        ("Register User A (no referral)", tester.test_register_user_a_no_referral),
+        ("Register User B (with User A's referral)", tester.test_register_user_b_with_referral),
+        ("Register User C (with User A's referral)", tester.test_register_user_c_with_referral),
+        ("Register User D (no referral)", tester.test_register_user_d_no_referral),
+        ("Register with invalid referral code", tester.test_register_with_invalid_referral),
+        ("Login User A", tester.test_login_user_a),
+        ("Get User A Profile (verify referral count)", tester.test_get_user_a_profile),
+        ("Get Stats (total participants)", tester.test_stats_endpoint),
+        ("Get Leaderboard (top referrers)", tester.test_leaderboard_endpoint),
     ]
     
     failed_tests = []
@@ -301,7 +303,7 @@ def main():
             failed_tests.append(test_name)
     
     # Print results
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 60)
     print(f"📊 Test Results: {tester.tests_passed}/{tester.tests_run} passed")
     
     if failed_tests:
