@@ -225,20 +225,80 @@ frontend:
         agent: "testing"
         comment: "✅ PASSED: Mobile menu toggle visible and functional. Mobile sidebar opens correctly. Mobile header logo element exists. Responsive layout working on mobile viewport (390x844)."
 
-  - task: "Logo Display Across All Pages"
+  - task: "PERSOFEST'26 Design Verification - Logo and Text Display"
     implemented: true
     working: true
-    file: "App.js"
+    file: "All pages (Landing.jsx, Register.jsx, Login.jsx, Dashboard.jsx, Sidebar.jsx)"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
-        comment: "Initial test setup - needs verification that logos are PNG images not Zap icons"
+        comment: "Initial design verification test - checking logo + PERSOFEST'26 text visibility across all pages"
       - working: true
         agent: "testing"
-        comment: "✅ PASSED: All logos across Landing, Register, Login, and Dashboard pages display as PNG images (/persofest.png) not Zap icons. Sidebar and mobile header logos also correctly displayed."
+        comment: "✅ PASSED: Logo image (/persofest.png) + PERSOFEST'26 text visible on all pages - Landing page header, Registration header, Login page prominently displayed, Dashboard sidebar, and Mobile header. All logos are PNG images, not icons."
+
+  - task: "PERSOFEST'26 Design Verification - Purple Primary Color"
+    implemented: true
+    working: true
+    file: "tailwind.config.js, index.css"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial design verification test - checking purple primary color (#9333EA) application"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASSED: Purple primary color (#9333EA = rgb(147, 51, 234)) correctly applied. Landing page REGISTER button, Login page SIGN IN button, Registration NEXT button all show correct purple color. No red colors found - all primary buttons are purple."
+
+  - task: "PERSOFEST'26 Design Verification - Dropdown Visual Indicators"
+    implemented: true
+    working: true
+    file: "Register.jsx, index.css"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial design verification test - checking dropdown arrows and visual indicators"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASSED: Dropdown selections have visible down arrows via CSS background-image SVG. Department and Year dropdowns in registration Step 2 show proper styling with select-brutal class and down arrow indicators. Form validation working with error messages."
+
+  - task: "PERSOFEST'26 Design Verification - Registration Flow"
+    implemented: true
+    working: false
+    file: "Register.jsx, server.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial design verification test - testing complete registration flow with dropdown selections"
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE: Backend API endpoints /api/departments and /api/years not returning data. Dropdowns show only default 'Select your department' and 'Select your year' options. Registration flow UI works perfectly (3 steps, referral code field, validation) but cannot complete due to missing dropdown data. This prevents users from completing registration."
+
+  - task: "PERSOFEST'26 Design Verification - Responsive Design"
+    implemented: true
+    working: true
+    file: "Sidebar.jsx, All components"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial design verification test - testing responsive design on desktop and mobile"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASSED: Responsive design working correctly. Desktop (1920x1080) shows full layout. Mobile (390x844) shows mobile header with logo + text, mobile menu toggle functional, sidebar opens correctly on mobile. All layouts adapt properly to different screen sizes."
 
 metadata:
   created_by: "testing_agent"
