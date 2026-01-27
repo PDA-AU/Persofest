@@ -8,18 +8,48 @@ class PersofestAPITester:
         self.token = None
         self.tests_run = 0
         self.tests_passed = 0
-        self.existing_user_data = {
-            "register_number": "2026AIML001",
-            "password": "test123"
-        }
-        self.test_user_data = {
-            "name": f"Test User {datetime.now().strftime('%H%M%S')}",
-            "register_number": f"2026TEST{datetime.now().strftime('%H%M%S')}",
-            "email": f"test{datetime.now().strftime('%H%M%S')}@example.com",
-            "phone_number": "9876543210",
+        self.user_a_referral_code = None
+        self.user_d_referral_code = None
+        
+        # Test data as specified in the review request
+        self.user_a_data = {
+            "name": "Test User A",
+            "register_number": "2026TEST001",
+            "email": "testa@test.com",
+            "phone_number": "1234567890",
             "department": "Artificial Intelligence and Data Science",
             "year_of_study": "First Year",
-            "password": "TestPass123!"
+            "password": "test123"
+        }
+        
+        self.user_b_data = {
+            "name": "Test User B",
+            "register_number": "2026TEST002",
+            "email": "testb@test.com",
+            "phone_number": "1234567891",
+            "department": "Aerospace Engineering",
+            "year_of_study": "Second Year",
+            "password": "test123"
+        }
+        
+        self.user_c_data = {
+            "name": "Test User C",
+            "register_number": "2026TEST003",
+            "email": "testc@test.com",
+            "phone_number": "1234567892",
+            "department": "Computer Technology",
+            "year_of_study": "Third Year",
+            "password": "test123"
+        }
+        
+        self.user_d_data = {
+            "name": "Test User D",
+            "register_number": "2026TEST004",
+            "email": "testd@test.com",
+            "phone_number": "1234567893",
+            "department": "Electronics and Communication Engineering",
+            "year_of_study": "First Year",
+            "password": "test123"
         }
 
     def run_test(self, name, method, endpoint, expected_status, data=None, headers=None):
