@@ -31,6 +31,7 @@ class ParticipantCreate(BaseModel):
     department: DepartmentEnum
     year_of_study: YearOfStudyEnum
     password: str
+    referral_code: Optional[str] = None
 
     @field_validator('name')
     @classmethod
@@ -69,6 +70,8 @@ class ParticipantResponse(BaseModel):
     department: str
     year_of_study: str
     profile_picture: Optional[str] = None
+    referral_code: str
+    referral_count: int
     created_at: Optional[datetime] = None
 
     class Config:
