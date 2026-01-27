@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../App';
-import { Home, User, LogOut, Menu, X, Zap } from 'lucide-react';
+import { User, LogOut, Menu, X, Zap } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onToggle }) => {
   const { logout, user } = useAuth();

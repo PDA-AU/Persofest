@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Zap, ArrowLeft, ArrowRight, Check, Upload, Eye, EyeOff, User, Mail, Phone, Building, GraduationCap, Lock, Image } from 'lucide-react';
+import { Zap, ArrowLeft, ArrowRight, Check, Eye, EyeOff, User, Mail, Phone, Building, GraduationCap, Lock } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 

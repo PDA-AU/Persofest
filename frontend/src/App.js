@@ -25,12 +25,23 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      fetchProfile();
-    } else {
-      setLoading(false);
-    }
+    const loadProfile = async () => {
+      if (token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        try {
+          const response = await axios.get('/api/profile/me');
+          setUser(response.data);
+        } catch (error) {
+          console.error('Failed to fetch profile:', error);
+          logout();
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+    loadProfile();
   }, [token]);
 
   const fetchProfile = async () => {
