@@ -166,8 +166,9 @@ const Register = () => {
       {/* Header */}
       <header className="relative z-10 p-4 border-b-4 border-black bg-surface">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/persofest.png" alt="PERSOFEST'26" className="h-7" />
+          <Link to="/" className="flex items-center gap-2 md:gap-3">
+            <img src="/persofest.png" alt="PERSOFEST'26" className="h-8 md:h-12 w-auto" />
+            <span className="font-heading text-sm md:text-lg tracking-tight">PERSOFEST'26</span>
           </Link>
           <Link to="/login" className="btn-brutal-outline px-4 py-2 text-xs" data-testid="login-link">
             Login
