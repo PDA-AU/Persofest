@@ -242,6 +242,36 @@ async def upload_profile_picture(
     return {"profile_picture": profile_url, "message": "Profile picture uploaded successfully"}
 
 
+@app.get("/api/stats")
+def get_stats(db: Session = Depends(get_db)):
+    """Get overall registration statistics."""
+    total_participants = db.query(func.count(Participant.id)).scalar()
+    return {
+        "total_participants": total_participants
+    }
+
+
+@app.get("/api/leaderboard")
+def get_leaderboard(db: Session = Depends(get_db)):
+    """Get top 5 users with most referrals."""
+    top_referrers = db.query(Participant).filter(
+        Participant.referral_count > 0
+    ).order_by(
+        Participant.referral_count.desc()
+    ).limit(5).all()
+    
+    leaderboard = [
+        {
+            "name": p.name,
+            "register_number": p.register_number,
+            "referral_count": p.referral_count
+        }
+        for p in top_referrers
+    ]
+    
+    return leaderboard
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)
