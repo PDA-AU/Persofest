@@ -3,11 +3,15 @@ import sys
 from datetime import datetime
 
 class PersofestAPITester:
-    def __init__(self, base_url="https://demobackend.emergentagent.com"):
+    def __init__(self, base_url="https://persofest-register.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.tests_run = 0
         self.tests_passed = 0
+        self.existing_user_data = {
+            "register_number": "2026AIML001",
+            "password": "test123"
+        }
         self.test_user_data = {
             "name": f"Test User {datetime.now().strftime('%H%M%S')}",
             "register_number": f"2026TEST{datetime.now().strftime('%H%M%S')}",
