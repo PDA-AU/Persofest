@@ -51,8 +51,7 @@ const Login = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <Zap size={40} className="text-primary" strokeWidth={3} />
-            <span className="font-heading text-2xl">PERSOFEST'26</span>
+            <img src="/persofest.png" alt="PERSOFEST'26" className="h-9" />
           </Link>
           <h1 className="font-heading text-3xl md:text-4xl mb-2">Welcome Back</h1>
           <p className="font-body text-sm text-gray-600">Sign in to access your profile</p>
