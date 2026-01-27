@@ -39,8 +39,9 @@ const Register = () => {
         axios.get(`${API_URL}/api/departments`),
         axios.get(`${API_URL}/api/years`)
       ]);
-      setDepartments(deptRes.data);
-      setYears(yearRes.data);
+      setDepartments(Array.isArray(deptRes.data) ? deptRes.data : []);
+      setYears(Array.isArray(yearRes.data) ? yearRes.data : []);
+
     } catch (err) {
       console.error('Failed to fetch options:', err);
     }
@@ -106,16 +107,14 @@ const Register = () => {
     setError('');
 
     try {
-      const selectedDept = departments.find(d => d.value === formData.department);
-      const selectedYear = years.find(y => y.value === formData.year_of_study);
-
+      
       const payload = {
         name: formData.name,
         register_number: formData.register_number.toUpperCase(),
         email: formData.email,
         phone_number: formData.phone_number,
-        department: selectedDept?.label,
-        year_of_study: selectedYear?.label,
+        department: formData.department,
+        year_of_study: formData.year_of_study,
         password: formData.password,
       };
 
@@ -313,7 +312,7 @@ const Register = () => {
                       data-testid="select-department"
                     >
                       <option value="">Select your department</option>
-                      {departments.map(dept => (
+                      {Array.isArray(departments) && departments.map(dept => (
                         <option key={dept.value} value={dept.value}>{dept.label}</option>
                       ))}
                     </select>
@@ -333,7 +332,7 @@ const Register = () => {
                       data-testid="select-year"
                     >
                       <option value="">Select your year</option>
-                      {years.map(year => (
+                      {Array.isArray(years) && years.map(year => (
                         <option key={year.value} value={year.value}>{year.label}</option>
                       ))}
                     </select>

@@ -78,15 +78,13 @@ def participant_to_response(participant: Participant) -> dict:
 def health_check():
     return {"status": "healthy", "message": "PERSOFEST'26 API is running"}
 
-
 @app.get("/api/departments")
 def get_departments():
-    return [{"value": d.name, "label": d.value} for d in DepartmentEnum]
-
+    return [{"value": d.value, "label": d.value} for d in DepartmentEnum]
 
 @app.get("/api/years")
 def get_years():
-    return [{"value": y.name, "label": y.value} for y in YearOfStudyEnum]
+    return [{"value": y.value, "label": y.value} for y in YearOfStudyEnum]
 
 
 @app.post("/api/auth/register", response_model=ParticipantResponse)
