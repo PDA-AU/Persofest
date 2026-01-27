@@ -1,12 +1,15 @@
 import os
 import shutil
+import random
+import string
 from datetime import timedelta
-from typing import Optional
+from typing import Optional, List
 from fastapi import FastAPI, Depends, HTTPException, status, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import func
 from dotenv import load_dotenv
 
 from database import engine, get_db, Base
@@ -44,6 +47,16 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 app.mount("/api/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 
+# Helper function to generate unique referral code
+def generate_referral_code(db: Session) -> str:
+    """Generate a unique 5-character referral code."""
+    while True:
+        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+        existing = db.query(Participant).filter(Participant.referral_code == code).first()
+        if not existing:
+            return code
+
+
 # Helper function to convert enum to string
 def participant_to_response(participant: Participant) -> dict:
     return {
@@ -55,6 +68,8 @@ def participant_to_response(participant: Participant) -> dict:
         "department": participant.department.value if participant.department else None,
         "year_of_study": participant.year_of_study.value if participant.year_of_study else None,
         "profile_picture": participant.profile_picture,
+        "referral_code": participant.referral_code,
+        "referral_count": participant.referral_count,
         "created_at": participant.created_at
     }
 
@@ -87,9 +102,21 @@ def register_participant(participant: ParticipantCreate, db: Session = Depends(g
             raise HTTPException(status_code=400, detail="Register number already registered")
         raise HTTPException(status_code=400, detail="Email already registered")
     
+    # Validate referral code if provided
+    referrer = None
+    if participant.referral_code:
+        referrer = db.query(Participant).filter(
+            Participant.referral_code == participant.referral_code.upper()
+        ).first()
+        if not referrer:
+            raise HTTPException(status_code=400, detail="Invalid referral code")
+    
     # Map string enum to SQLAlchemy enum
     dept_mapping = {e.value: e for e in Department}
     year_mapping = {e.value: e for e in YearOfStudy}
+    
+    # Generate unique referral code for new participant
+    new_referral_code = generate_referral_code(db)
     
     db_participant = Participant(
         name=participant.name,
@@ -98,11 +125,19 @@ def register_participant(participant: ParticipantCreate, db: Session = Depends(g
         phone_number=participant.phone_number,
         department=dept_mapping[participant.department.value],
         year_of_study=year_mapping[participant.year_of_study.value],
-        password_hash=get_password_hash(participant.password)
+        password_hash=get_password_hash(participant.password),
+        referral_code=new_referral_code,
+        referred_by=participant.referral_code.upper() if participant.referral_code else None,
+        referral_count=0
     )
     
     try:
         db.add(db_participant)
+        
+        # Increment referrer's count if referral code was used
+        if referrer:
+            referrer.referral_count += 1
+        
         db.commit()
         db.refresh(db_participant)
     except IntegrityError:
