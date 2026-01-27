@@ -105,9 +105,9 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background p-4 md:p-8 page-transition">
       {/* Page Header */}
-      <div className="max-w-4xl mx-auto mb-8">
-        <h1 className="font-heading text-3xl md:text-4xl mb-2">My Profile</h1>
-        <p className="font-body text-sm text-gray-600">Manage your PERSOFEST'26 registration details</p>
+      <div className="max-w-4xl mx-auto mb-6 md:mb-8">
+        <h1 className="font-heading text-2xl md:text-4xl mb-2">My Profile</h1>
+        <p className="font-body text-xs md:text-sm text-gray-600">Manage your PERSOFEST'26 registration details</p>
       </div>
 
       {/* Message */}
@@ -127,11 +127,11 @@ const Dashboard = () => {
 
       <div className="max-w-4xl mx-auto">
         {/* Bento Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-4">
           {/* Profile Picture Card */}
           <div className="md:col-span-1">
-            <div className="card-brutal p-6 text-center h-full">
-              <h3 className="font-heading text-sm uppercase tracking-widest mb-4">Profile Photo</h3>
+            <div className="card-brutal p-4 md:p-6 text-center h-full transition-all duration-300 hover:shadow-brutal-lg">
+              <h3 className="font-heading text-xs md:text-sm uppercase tracking-widest mb-3 md:mb-4">Profile Photo</h3>
               
               <div 
                 className="relative w-32 h-32 mx-auto mb-4 cursor-pointer group"
@@ -183,9 +183,9 @@ const Dashboard = () => {
 
           {/* Main Info Card */}
           <div className="md:col-span-2">
-            <div className="card-brutal p-6 h-full">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="font-heading text-sm uppercase tracking-widest">Personal Information</h3>
+            <div className="card-brutal p-4 md:p-6 h-full transition-all duration-300 hover:shadow-brutal-lg">
+              <div className="flex justify-between items-center mb-4 md:mb-6">
+                <h3 className="font-heading text-xs md:text-sm uppercase tracking-widest">Personal Information</h3>
                 <button
                   onClick={isEditing ? handleSave : handleEditToggle}
                   disabled={loading}
@@ -220,8 +220,8 @@ const Dashboard = () => {
                 </button>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {profileFields.map((field) => {
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                {profileFields.map((field, index) => {
                   const Icon = field.icon;
                   const value = user?.[field.key] || '-';
                   const isFieldEditable = field.editable && isEditing;
@@ -229,12 +229,13 @@ const Dashboard = () => {
                   return (
                     <div 
                       key={field.key} 
-                      className={`p-4 border-2 border-black ${isFieldEditable ? 'bg-accent/20' : 'bg-white'}`}
+                      className={`p-3 md:p-4 border-2 border-black transition-all duration-300 ${isFieldEditable ? 'bg-accent/20' : 'bg-white'}`}
+                      style={{ animationDelay: `${index * 50}ms` }}
                       data-testid={`field-${field.key}`}
                     >
-                      <div className="flex items-center gap-2 mb-2">
-                        <Icon size={16} className="text-secondary" strokeWidth={2.5} />
-                        <span className="label-brutal mb-0">{field.label}</span>
+                      <div className="flex items-center gap-2 mb-1 md:mb-2">
+                        <Icon size={14} className="text-secondary md:w-4 md:h-4" strokeWidth={2.5} />
+                        <span className="label-brutal mb-0 text-[10px] md:text-xs">{field.label}</span>
                       </div>
                       
                       {isFieldEditable ? (
@@ -243,11 +244,11 @@ const Dashboard = () => {
                           name={field.key}
                           value={editData[field.key]}
                           onChange={handleChange}
-                          className="input-brutal h-10 text-sm"
+                          className="input-brutal h-9 md:h-10 text-xs md:text-sm"
                           data-testid={`edit-${field.key}`}
                         />
                       ) : (
-                        <p className="font-body text-sm font-bold truncate" title={value}>
+                        <p className="font-body text-xs md:text-sm font-bold truncate" title={value}>
                           {value}
                         </p>
                       )}
@@ -260,16 +261,16 @@ const Dashboard = () => {
 
           {/* Registration Info Card */}
           <div className="md:col-span-3">
-            <div className="card-brutal p-6 bg-secondary text-white">
+            <div className="card-brutal p-4 md:p-6 bg-secondary text-white transition-all duration-300 hover:shadow-brutal-lg">
               <div className="flex items-center gap-2 mb-2">
-                <Calendar size={20} strokeWidth={2.5} />
-                <h3 className="font-heading text-sm uppercase tracking-widest">Registration Status</h3>
+                <Calendar size={18} strokeWidth={2.5} className="md:w-5 md:h-5" />
+                <h3 className="font-heading text-xs md:text-sm uppercase tracking-widest">Registration Status</h3>
               </div>
-              <div className="flex flex-wrap items-center gap-4">
-                <span className="badge-brutal bg-accent text-black">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 md:gap-4">
+                <span className="badge-brutal bg-accent text-black text-xs">
                   Registered
                 </span>
-                <p className="font-body text-sm">
+                <p className="font-body text-xs md:text-sm">
                   You're all set for PERSOFEST'26! Keep an eye out for event updates.
                 </p>
               </div>
