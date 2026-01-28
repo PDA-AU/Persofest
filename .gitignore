@@ -9,6 +9,7 @@
 # Python
 # =========================
 backend/venv/
+backend/myvenv/
 backend/__pycache__/
 **/__pycache__/
 *.pyc
