@@ -149,15 +149,17 @@ const Landing = () => {
               </div>
               <p className="font-body text-xs md:text-sm">Our community builders leading the way!</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4 max-w-5xl mx-auto">
               {leaderboard.map((user, index) => (
-                <div 
+                <div
                   key={user.register_number}
                   className={`card-brutal p-4 md:p-5 text-center transition-all duration-300 hover:shadow-brutal-lg ${
-                    index === 0 ? 'bg-primary md:col-span-5 md:row-start-1' : 'bg-white'
+                    index === 0
+                      ? 'bg-primary md:col-span-4 md:row-start-1'
+                      : 'bg-white md:col-span-2'
                   }`}
-                  style={{ animationDelay: `${index * 100}ms` }}
                 >
+
                   <div className={`font-heading ${index === 0 ? 'text-3xl md:text-4xl' : 'text-2xl md:text-3xl'} mb-2`}>
                     #{index + 1}
                   </div>

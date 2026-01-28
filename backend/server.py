@@ -256,7 +256,7 @@ def get_leaderboard(db: Session = Depends(get_db)):
         Participant.referral_count > 0
     ).order_by(
         Participant.referral_count.desc()
-    ).limit(5).all()
+    ).limit(3).all()
     
     leaderboard = [
         {
