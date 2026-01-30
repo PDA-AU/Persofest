@@ -72,10 +72,26 @@ class ParticipantResponse(BaseModel):
     profile_picture: Optional[str] = None
     referral_code: str
     referral_count: int
+    is_admin: int = 0
     created_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
+
+
+class AdminStatsResponse(BaseModel):
+    total_participants: int
+    by_department: dict
+    by_year: dict
+    total_referrals: int
+    recent_registrations: int
+
+
+class ParticipantListResponse(BaseModel):
+    participants: list
+    total: int
+    page: int
+    per_page: int
 
 
 class Token(BaseModel):

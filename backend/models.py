@@ -38,5 +38,6 @@ class Participant(Base):
     referral_code = Column(String(5), unique=True, nullable=False, index=True)
     referred_by = Column(String(5), nullable=True, index=True)
     referral_count = Column(Integer, default=0, nullable=False)
+    is_admin = Column(Integer, default=0, nullable=False)  # 0 = user, 1 = admin
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
