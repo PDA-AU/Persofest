@@ -70,8 +70,16 @@ def participant_to_response(participant: Participant) -> dict:
         "profile_picture": participant.profile_picture,
         "referral_code": participant.referral_code,
         "referral_count": participant.referral_count,
+        "is_admin": participant.is_admin,
         "created_at": participant.created_at
     }
+
+
+def require_admin(current_user: Participant = Depends(get_current_user)):
+    """Dependency to require admin access"""
+    if current_user.is_admin != 1:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return current_user
 
 
 @app.get("/api/health")
