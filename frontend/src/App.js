@@ -5,6 +5,7 @@ import Landing from './pages/Landing';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import Sidebar from './components/Sidebar';
 import './App.css';
 
@@ -103,6 +104,10 @@ function App() {
               <Route 
                 path="/dashboard" 
                 element={user ? <Dashboard /> : <Navigate to="/login" />} 
+              />
+              <Route 
+                path="/admin" 
+                element={user?.is_admin === 1 ? <AdminDashboard /> : <Navigate to="/dashboard" />} 
               />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
