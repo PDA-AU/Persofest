@@ -278,6 +278,169 @@ def get_leaderboard(db: Session = Depends(get_db)):
     return leaderboard
 
 
+# ==================== ADMIN ENDPOINTS ====================
+
+@app.get("/api/admin/stats")
+def get_admin_stats(
+    db: Session = Depends(get_db),
+    current_user: Participant = Depends(require_admin)
+):
+    """Get comprehensive admin statistics."""
+    from datetime import datetime, timedelta, timezone
+    
+    # Total participants (excluding admins)
+    total = db.query(func.count(Participant.id)).filter(Participant.is_admin == 0).scalar()
+    
+    # By department
+    dept_stats = db.query(
+        Participant.department,
+        func.count(Participant.id)
+    ).filter(Participant.is_admin == 0).group_by(Participant.department).all()
+    by_department = {d.value: c for d, c in dept_stats if d}
+    
+    # By year
+    year_stats = db.query(
+        Participant.year_of_study,
+        func.count(Participant.id)
+    ).filter(Participant.is_admin == 0).group_by(Participant.year_of_study).all()
+    by_year = {y.value: c for y, c in year_stats if y}
+    
+    # Total referrals
+    total_referrals = db.query(func.sum(Participant.referral_count)).scalar() or 0
+    
+    # Recent registrations (last 7 days)
+    week_ago = datetime.now(timezone.utc) - timedelta(days=7)
+    recent = db.query(func.count(Participant.id)).filter(
+        Participant.is_admin == 0,
+        Participant.created_at >= week_ago
+    ).scalar()
+    
+    return {
+        "total_participants": total,
+        "by_department": by_department,
+        "by_year": by_year,
+        "total_referrals": total_referrals,
+        "recent_registrations": recent
+    }
+
+
+@app.get("/api/admin/participants")
+def get_all_participants(
+    page: int = 1,
+    per_page: int = 20,
+    search: str = "",
+    department: str = "",
+    year: str = "",
+    db: Session = Depends(get_db),
+    current_user: Participant = Depends(require_admin)
+):
+    """Get paginated list of all participants with filters."""
+    query = db.query(Participant).filter(Participant.is_admin == 0)
+    
+    # Apply search filter
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(
+            (Participant.name.ilike(search_term)) |
+            (Participant.register_number.ilike(search_term)) |
+            (Participant.email.ilike(search_term))
+        )
+    
+    # Apply department filter
+    if department:
+        dept_mapping = {e.value: e for e in Department}
+        if department in dept_mapping:
+            query = query.filter(Participant.department == dept_mapping[department])
+    
+    # Apply year filter
+    if year:
+        year_mapping = {e.value: e for e in YearOfStudy}
+        if year in year_mapping:
+            query = query.filter(Participant.year_of_study == year_mapping[year])
+    
+    # Get total count
+    total = query.count()
+    
+    # Apply pagination
+    offset = (page - 1) * per_page
+    participants = query.order_by(Participant.created_at.desc()).offset(offset).limit(per_page).all()
+    
+    return {
+        "participants": [participant_to_response(p) for p in participants],
+        "total": total,
+        "page": page,
+        "per_page": per_page
+    }
+
+
+@app.delete("/api/admin/participants/{participant_id}")
+def delete_participant(
+    participant_id: int,
+    db: Session = Depends(get_db),
+    current_user: Participant = Depends(require_admin)
+):
+    """Delete a participant."""
+    participant = db.query(Participant).filter(Participant.id == participant_id).first()
+    
+    if not participant:
+        raise HTTPException(status_code=404, detail="Participant not found")
+    
+    if participant.is_admin == 1:
+        raise HTTPException(status_code=400, detail="Cannot delete admin users")
+    
+    db.delete(participant)
+    db.commit()
+    
+    return {"message": "Participant deleted successfully"}
+
+
+@app.post("/api/admin/make-admin/{register_number}")
+def make_admin(
+    register_number: str,
+    db: Session = Depends(get_db),
+    current_user: Participant = Depends(require_admin)
+):
+    """Promote a user to admin."""
+    user = db.query(Participant).filter(
+        Participant.register_number == register_number.upper()
+    ).first()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    user.is_admin = 1
+    db.commit()
+    
+    return {"message": f"{user.name} is now an admin"}
+
+
+@app.get("/api/admin/export")
+def export_participants(
+    db: Session = Depends(get_db),
+    current_user: Participant = Depends(require_admin)
+):
+    """Export all participants data."""
+    participants = db.query(Participant).filter(Participant.is_admin == 0).order_by(Participant.created_at.desc()).all()
+    
+    return {
+        "data": [
+            {
+                "name": p.name,
+                "register_number": p.register_number,
+                "email": p.email,
+                "phone_number": p.phone_number,
+                "department": p.department.value if p.department else "",
+                "year_of_study": p.year_of_study.value if p.year_of_study else "",
+                "referral_code": p.referral_code,
+                "referral_count": p.referral_count,
+                "created_at": p.created_at.isoformat() if p.created_at else ""
+            }
+            for p in participants
+        ],
+        "total": len(participants)
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)
