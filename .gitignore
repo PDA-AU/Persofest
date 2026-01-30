@@ -35,4 +35,7 @@ postgres-data/
 # =========================
 .DS_Store
 
--e
+-e-e 
+# Environment files
+*.env
+*.env.*
