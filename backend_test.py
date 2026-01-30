@@ -272,24 +272,207 @@ class PersofestAPITester:
             return len(response) >= 0  # At least return success if we get a list
         return False
 
+    def test_admin_login(self):
+        """Test admin login with ADMIN001 credentials"""
+        login_data = {
+            "register_number": "ADMIN001",
+            "password": "admin123"
+        }
+        success, response = self.run_test(
+            "Admin Login",
+            "POST",
+            "api/auth/login",
+            200,
+            data=login_data
+        )
+        if success and 'access_token' in response:
+            self.token = response['access_token']
+            print(f"   Admin login successful, token received")
+            return True
+        return False
+
+    def test_admin_profile(self):
+        """Test admin profile to verify is_admin flag"""
+        if not self.token:
+            print("❌ No admin token available")
+            return False
+        
+        success, response = self.run_test(
+            "Get Admin Profile",
+            "GET",
+            "api/profile/me",
+            200
+        )
+        if success and 'is_admin' in response:
+            print(f"   Admin flag: {response['is_admin']}")
+            if response['is_admin'] == 1:
+                return True
+        return False
+
+    def test_admin_stats(self):
+        """Test admin stats endpoint"""
+        if not self.token:
+            print("❌ No admin token available")
+            return False
+        
+        success, response = self.run_test(
+            "Admin Stats",
+            "GET",
+            "api/admin/stats",
+            200
+        )
+        if success:
+            required_fields = ['total_participants', 'by_department', 'by_year', 'total_referrals', 'recent_registrations']
+            for field in required_fields:
+                if field not in response:
+                    print(f"   Missing field: {field}")
+                    return False
+            print(f"   Total participants: {response['total_participants']}")
+            print(f"   Departments: {len(response['by_department'])}")
+            print(f"   Years: {len(response['by_year'])}")
+            print(f"   Total referrals: {response['total_referrals']}")
+            print(f"   Recent registrations: {response['recent_registrations']}")
+            return True
+        return False
+
+    def test_admin_participants(self):
+        """Test admin participants endpoint"""
+        if not self.token:
+            print("❌ No admin token available")
+            return False
+        
+        success, response = self.run_test(
+            "Admin Participants List",
+            "GET",
+            "api/admin/participants",
+            200
+        )
+        if success:
+            required_fields = ['participants', 'total', 'page', 'per_page']
+            for field in required_fields:
+                if field not in response:
+                    print(f"   Missing field: {field}")
+                    return False
+            print(f"   Total participants: {response['total']}")
+            print(f"   Participants in response: {len(response['participants'])}")
+            return True
+        return False
+
+    def test_admin_participants_search(self):
+        """Test admin participants search functionality"""
+        if not self.token:
+            print("❌ No admin token available")
+            return False
+        
+        success, response = self.run_test(
+            "Admin Participants Search",
+            "GET",
+            "api/admin/participants?search=2026CS001",
+            200
+        )
+        if success:
+            print(f"   Search results: {len(response.get('participants', []))}")
+            return True
+        return False
+
+    def test_admin_participants_filter_department(self):
+        """Test admin participants department filter"""
+        if not self.token:
+            print("❌ No admin token available")
+            return False
+        
+        success, response = self.run_test(
+            "Admin Participants Department Filter",
+            "GET",
+            "api/admin/participants?department=Computer Science and Engineering",
+            200
+        )
+        if success:
+            print(f"   Department filter results: {len(response.get('participants', []))}")
+            return True
+        return False
+
+    def test_admin_export(self):
+        """Test admin export endpoint"""
+        if not self.token:
+            print("❌ No admin token available")
+            return False
+        
+        success, response = self.run_test(
+            "Admin Export",
+            "GET",
+            "api/admin/export",
+            200
+        )
+        if success:
+            required_fields = ['data', 'total']
+            for field in required_fields:
+                if field not in response:
+                    print(f"   Missing field: {field}")
+                    return False
+            print(f"   Export data count: {response['total']}")
+            if response['total'] > 0 and len(response['data']) > 0:
+                first_participant = response['data'][0]
+                expected_fields = ['name', 'register_number', 'email', 'phone_number', 'department', 'year_of_study', 'referral_code', 'referral_count', 'created_at']
+                for field in expected_fields:
+                    if field not in first_participant:
+                        print(f"   Missing participant field: {field}")
+                        return False
+            return True
+        return False
+
+    def test_non_admin_access_denied(self):
+        """Test that non-admin users cannot access admin endpoints"""
+        # First login as regular user
+        login_data = {
+            "register_number": "2026CS001",
+            "password": "test123"
+        }
+        success, response = self.run_test(
+            "Regular User Login",
+            "POST",
+            "api/auth/login",
+            200,
+            data=login_data
+        )
+        
+        if not success:
+            print("   Regular user login failed, skipping access control test")
+            return False
+        
+        regular_token = response['access_token']
+        old_token = self.token
+        self.token = regular_token
+        
+        # Try to access admin endpoint - should fail with 403
+        success, response = self.run_test(
+            "Non-Admin Access to Admin Stats (should fail)",
+            "GET",
+            "api/admin/stats",
+            403
+        )
+        
+        # Restore admin token
+        self.token = old_token
+        return success
+
 def main():
-    print("🚀 Starting PERSOFEST'26 Referral System API Tests")
+    print("🚀 Starting PERSOFEST'26 Admin Dashboard API Tests")
     print("=" * 60)
     
     tester = PersofestAPITester()
     
-    # Test sequence as specified in review request
+    # Test sequence for admin functionality
     tests = [
         ("Health Check", tester.test_health_check),
-        ("Register User A (no referral)", tester.test_register_user_a_no_referral),
-        ("Register User B (with User A's referral)", tester.test_register_user_b_with_referral),
-        ("Register User C (with User A's referral)", tester.test_register_user_c_with_referral),
-        ("Register User D (no referral)", tester.test_register_user_d_no_referral),
-        ("Register with invalid referral code", tester.test_register_with_invalid_referral),
-        ("Login User A", tester.test_login_user_a),
-        ("Get User A Profile (verify referral count)", tester.test_get_user_a_profile),
-        ("Get Stats (total participants)", tester.test_stats_endpoint),
-        ("Get Leaderboard (top referrers)", tester.test_leaderboard_endpoint),
+        ("Admin Login (ADMIN001)", tester.test_admin_login),
+        ("Admin Profile Verification", tester.test_admin_profile),
+        ("Admin Stats Endpoint", tester.test_admin_stats),
+        ("Admin Participants List", tester.test_admin_participants),
+        ("Admin Participants Search", tester.test_admin_participants_search),
+        ("Admin Participants Department Filter", tester.test_admin_participants_filter_department),
+        ("Admin Export Endpoint", tester.test_admin_export),
+        ("Non-Admin Access Control", tester.test_non_admin_access_denied),
     ]
     
     failed_tests = []
