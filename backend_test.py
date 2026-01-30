@@ -3,7 +3,7 @@ import sys
 from datetime import datetime
 
 class PersofestAPITester:
-    def __init__(self, base_url="https://persofest-portal.preview.emergentagent.com"):
+    def __init__(self, base_url="https://admin-control-114.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.tests_run = 0
