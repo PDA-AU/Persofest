@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../App';
-import { User, LogOut, Menu, X } from 'lucide-react';
+import { User, LogOut, Menu, X, LayoutDashboard } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onToggle }) => {
   const { logout, user } = useAuth();
@@ -15,6 +15,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
 
   const navItems = [
     { path: '/dashboard', label: 'Profile', icon: User },
+    ...(user?.is_admin === 1 ? [{ path: '/admin', label: 'Admin', icon: LayoutDashboard }] : []),
   ];
 
   return (
